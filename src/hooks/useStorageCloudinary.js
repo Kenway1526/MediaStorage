@@ -1,17 +1,19 @@
 import { useState } from 'react';
 import { Alert } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import { supabase } from '../database/supabaseConfig'; // Importamos Supabase
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../database/firebaseConfig';
 
-export const useStorage = () => {
+export const useStorageCloudinary = () => {
   const [uploading, setUploading] = useState(false);
 
-  // Credenciales de Cloudinary obtenidas de tu Dashboard
+  // Tus credenciales reales de Cloudinary
   const CLOUD_NAME = "dzwwsstnn"; 
   const UPLOAD_PRESET = "mediastorage"; 
 
   const uploadMedia = async () => {
     try {
+      // 1. Selección de archivo multimedia
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ['images', 'videos'],
         allowsEditing: true,
@@ -23,7 +25,7 @@ export const useStorage = () => {
 
       const file = result.assets[0];
       
-      // 1. Preparar FormData para Cloudinary
+      // 2. Preparar FormData para la API de Cloudinary
       const data = new FormData();
       data.append('file', {
         uri: file.uri,
@@ -32,33 +34,35 @@ export const useStorage = () => {
       });
       data.append('upload_preset', UPLOAD_PRESET);
 
-      // 2. Subida a la API de Cloudinary
+      // 3. Petición a Cloudinary
       const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {
         method: 'POST',
         body: data,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
       const cloudinaryData = await response.json();
-      if (!response.ok) throw new Error("Fallo la subida a Cloudinary");
 
-      // 3. Registro en la tabla 'uploads' de Supabase
-      const { error: dbError } = await supabase
-        .from('uploads')
-        .insert([
-          { 
-            name: cloudinaryData.original_filename || "file", 
-            url: cloudinaryData.secure_url, 
-            type: file.type 
-          }
-        ]);
+      if (!response.ok) {
+        throw new Error(cloudinaryData.error?.message || "Error en Cloudinary");
+      }
 
-      if (dbError) throw dbError;
+      // 4. Guardar la URL en Firebase Firestore
+      await addDoc(collection(db, 'uploads'), {
+        name: cloudinaryData.original_filename || "file",
+        url: cloudinaryData.secure_url, 
+        type: file.type,
+        createdAt: new Date().toISOString(),
+      });
 
-      Alert.alert('¡Éxito!', 'Archivo en Cloudinary y registro en Supabase exitoso.');
+      Alert.alert('¡Éxito!', 'Archivo guardado en Cloudinary y registrado en Firebase.');
 
     } catch (error) {
-      console.error("Error Híbrido (Cloudinary + Supabase):", error);
-      Alert.alert('Error', 'No se pudo completar el proceso. Revisa el esquema de tu tabla.');
+      console.error("Error Híbrido:", error);
+      Alert.alert('Error', 'No se pudo completar la subida. Revisa el preset mediastorage.');
     } finally {
       setUploading(false);
     }

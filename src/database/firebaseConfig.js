@@ -1,8 +1,9 @@
-import { initializeApp } from 'firebase/app';
-import { getStorage } from 'firebase/storage';
-import { getFirestore } from 'firebase/firestore';
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Pega aquí TUS datos de la consola de Firebase
+// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCn1-iLmOX3aYIqKoCpzhcfZWs-l8ncsIU",
   authDomain: "almaimavid.firebaseapp.com",
@@ -12,6 +13,5 @@ const firebaseConfig = {
   appId: "1:196097954024:web:81fc4b76a9983fde36395d"
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const strg = getStorage(app);

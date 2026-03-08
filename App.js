@@ -8,82 +8,40 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Media Cloud JEF</Text>
-        <Text style={styles.subtitle}>Almacenamiento de Imagen y Video</Text>
+        <Text style={styles.title}>Media Storage App</Text>
+        <Text style={styles.subtitle}>Cloudinary + Supabase DB</Text>
       </View>
 
       <View style={styles.content}>
-        {uploading ? (
-          <View style={styles.loaderContainer}>
-            <ActivityIndicator size="large" color="#0000ff" />
-            <Text style={styles.loaderText}>Subiendo a Firebase...</Text>
-          </View>
-        ) : (
-          <TouchableOpacity 
-            style={styles.uploadButton} 
-            onPress={uploadMedia}
-          >
-            <Text style={styles.buttonText}>Seleccionar Archivo</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity 
+          style={[styles.button, uploading && styles.buttonDisabled]} 
+          onPress={uploadMedia}
+          disabled={uploading}
+        >
+          {uploading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Subir Multimedia</Text>
+          )}
+        </TouchableOpacity>
       </View>
 
       <View style={styles.footer}>
-        <Text style={styles.footerText}>Ingeniería de Sistemas - 2026</Text>
+        <Text style={styles.footerText}>Ingeniería de Sistemas</Text>
       </View>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  header: {
-    marginTop: 50,
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#666',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  uploadButton: {
-    backgroundColor: '#007AFF',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    elevation: 3,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '6400',
-  },
-  loaderContainer: {
-    alignItems: 'center',
-  },
-  loaderText: {
-    marginTop: 10,
-    fontSize: 16,
-    color: '#007AFF',
-  },
-  footer: {
-    padding: 20,
-    alignItems: 'center',
-  },
-  footerText: {
-    color: '#aaa',
-    fontSize: 12,
-  }
+  container: { flex: 1, backgroundColor: '#f0f4f8' },
+  header: { padding: 40, backgroundColor: '#3ecf8e', alignItems: 'center' }, // Color Supabase
+  title: { fontSize: 24, fontWeight: 'bold', color: '#fff' },
+  subtitle: { color: '#e0fcf0', fontSize: 12 },
+  content: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  button: { backgroundColor: '#3ecf8e', padding: 20, borderRadius: 12 },
+  buttonDisabled: { opacity: 0.6 },
+  buttonText: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+  footer: { padding: 20, alignItems: 'center' },
+  footerText: { color: '#999', fontSize: 10 }
 });
