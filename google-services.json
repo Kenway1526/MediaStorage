@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "196097954024",
+    "project_id": "almaimavid",
+    "storage_bucket": "almaimavid.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196097954024:android:b39d58483ff4056436395d",
+        "android_client_info": {
+          "package_name": "com.tm.mediastorage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUi6ZdmyhyESt5OFjx2Rd_7Jf1UAHnSi4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
